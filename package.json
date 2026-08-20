@@ -1,0 +1,17 @@
+{
+  "name": "my-dsh-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "pnpm monorepo for DeepSeek Harness (DSH) plugins",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "bundle": "pnpm -r bundle",
+    "typecheck": "pnpm -r typecheck",
+    "watch": "pnpm -r watch",
+    "verify": "pnpm -r verify"
+  }
+}

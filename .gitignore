@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build output
+lib/
+dist/
+*.tsbuildinfo
+
+# logs
+*.log
+pnpm-debug.log*
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# scratch reference material downloaded during development
+_ref_*
