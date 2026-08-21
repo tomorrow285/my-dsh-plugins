@@ -27,14 +27,23 @@ current session into the browser path so every session is addressable:
 
 ## How it works
 
-Pure-client plugin. The node half (`lib/index.js`) is an empty `apply` so the
-row exists in the host Loader; the browser half (`lib/client.js`) is built for
-the `window.__ModuleLoader__.load` module table and discovered through the
-`dsh.client` declaration in `package.json`.
+Hybrid plugin. The **node half** (`lib/index.js`) registers two webserver
+prefix routes — `/chat` and `/w` — that render the SPA index for chat deep
+links. This is required because the shipped frontend-static fallback answers
+unknown paths with an empty 404 (no SPA history fallback): without these
+routes, refreshing a `/chat/{sessionId}` or `/w/{workspaceId}/chat/{sessionId}`
+bookmark would blank the page before the client bundle could run. The routes
+claim only the chat path shapes (everything else keeps the original 404
+behavior) and render the same index.html as the app root — fetched from the
+loopback server so every index tap (module graph, password gate, …) applies
+— while preserving the URL so the browser half can open the named session.
+
+The **browser half** (`lib/client.js`) is built for the `window.__ModuleLoader__.load`
+module table and discovered through the `dsh.client` declaration in `package.json`.
 
 The sync subscribes to the `sessions` and `workspaces` client services
 (optional reads via `ctx.get`), so it degrades to a no-op if the shell lacks
-them. No UI, no styles, no host RPC.
+them. No UI, no styles, no host RPC beyond the deep-link routes above.
 
 ## Layout
 
@@ -44,7 +53,7 @@ packages/dsh-ui-history/
 ├── tsdown.config.ts      # self-contained client bundle preset
 ├── cordis.patch.yml      # profile patch row
 └── src/
-    ├── index.ts          # node half (empty apply)
+    ├── index.ts          # node half (deep-link SPA routes)
     └── client/
         ├── index.ts      # client entry: apply + inject
         └── history.ts    # URL ↔ session sync logic
