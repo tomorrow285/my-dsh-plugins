@@ -1,0 +1,57 @@
+{
+  "name": "dsh-ui-history",
+  "version": "0.1.0",
+  "description": "Session URL sync for the DSH web client: mirrors the current session into the browser path (/chat/{sessionId}, with an optional /w/{workspaceId} prefix) and opens the session a /chat/ path names on load or back/forward navigation.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build": "pnpm build:types && pnpm bundle",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify": "pnpm typecheck && pnpm build"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ]
+    }
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-runtime": "0.1.0-rc.6",
+    "tsdown": "^0.22.14",
+    "typescript": "~6.0.3"
+  }
+}
