@@ -5,6 +5,8 @@ export const zh = {
   'aria.toc': '对话目录',
   'toggle.open': '展开目录',
   'toggle.close': '收起目录',
+  'top.title': '回到顶部',
+  'top.label': '回到顶部',
   'image': '[图片]',
   'empty': '(空)',
 } satisfies Record<string, string>
@@ -24,6 +26,8 @@ export const en = {
   'aria.toc': 'Table of contents',
   'toggle.open': 'Open contents',
   'toggle.close': 'Close contents',
+  'top.title': 'Back to top',
+  'top.label': 'Back to top',
   'image': '[image]',
   'empty': '(empty)',
 } satisfies Record<TocKey, string>

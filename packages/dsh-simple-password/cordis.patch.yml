@@ -1,0 +1,4 @@
+# dsh-simple-password bundle patch: one host plugin row.
+- insert:
+    - id: dsh-simple-password
+      name: 'dsh-simple-password'

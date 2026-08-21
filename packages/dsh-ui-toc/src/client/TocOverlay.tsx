@@ -101,7 +101,10 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
       return
     }
     const update = () => setRect(scrollport.getBoundingClientRect())
-    const syncChat = () => setChatVisible(scrollport.querySelector('[data-chat-anchor-key]') !== null)
+    // The chat view's stable container exists whenever the chat tab is active,
+    // regardless of how many messages it holds — so the TOC renders even for a
+    // conversation with zero user turns yet.
+    const syncChat = () => setChatVisible(scrollport.querySelector('[data-chat-flow]') !== null)
     update()
     syncChat()
     const resizeObserver = new ResizeObserver(update)
@@ -133,7 +136,8 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
     return out
   }, [snapshot, t])
 
-  const shouldRender = chatVisible && userMessages.length >= 2 && rect !== null
+  // Render whenever the chat view is mounted — no minimum message count.
+  const shouldRender = chatVisible && rect !== null
   const mobile = rect !== null && rect.width < TOC_MIN_WIDTH
 
   // Active tracking: which user message is currently at the top of the view.
@@ -171,9 +175,9 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (activeKey === null || panelRef.current === null) return
-    const index = userMessages.findIndex(message => message.key === activeKey)
-    if (index < 0) return
-    const item = panelRef.current.children[index] as HTMLElement | undefined
+    const item = panelRef.current.querySelector<HTMLElement>(
+      `[data-toc-item="${escapeSelector(activeKey)}"]`,
+    )
     item?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [activeKey, userMessages])
 
@@ -191,6 +195,13 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
   const handleItemClick = (key: string) => {
     document.querySelector<HTMLElement>(`[data-chat-anchor-key="${escapeSelector(key)}"]`)
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setOpen(false)
+  }
+
+  // Scroll the conversation back to the very top of the scrollport
+  // (scrollTop = 0), regardless of how many user messages exist.
+  const handleTopClick = () => {
+    scrollport?.scrollTo({ top: 0, behavior: 'smooth' })
     setOpen(false)
   }
 
@@ -233,6 +244,23 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
           className={cn(styles.drawer, open && styles.drawerOpen)}
           style={drawerStyle}
         >
+          <button
+            type="button"
+            className={styles.topItem}
+            title={t('top.title')}
+            onClick={handleTopClick}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path
+                d="M7 11.5V2.5M3.5 6 7 2.5 10.5 6"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span className={styles.topItemText}>{t('top.label')}</span>
+          </button>
           {userMessages.map(message => (
             <div
               key={message.key}
@@ -268,9 +296,19 @@ export function TocOverlay({ useSessions, sessions, t }: TocOverlayProps) {
       className={styles.toc}
       style={panelStyle}
     >
+      <button
+        type="button"
+        className={styles.topItem}
+        title={t('top.title')}
+        aria-label={t('top.title')}
+        onClick={handleTopClick}
+      >
+        <span className={styles.topItemBar} />
+      </button>
       {userMessages.map(message => (
         <div
           key={message.key}
+          data-toc-item={message.key}
           className={cn(styles.item, message.key === activeKey && styles.itemActive)}
           title={message.label}
           onClick={() => handleItemClick(message.key)}
