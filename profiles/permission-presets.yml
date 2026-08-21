@@ -38,5 +38,5 @@
       god-mode:
         sandbox: danger-full-access
         approval: ask
-        name: god-mode
+        name: ⚡ god-mode
         description: Full file access with no approval prompts — the sandbox is already at the top of the escalation ladder, so nothing can ask.
