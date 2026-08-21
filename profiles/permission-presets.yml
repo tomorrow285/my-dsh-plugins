@@ -12,13 +12,16 @@
 #   approval — ask | never        (ask = interactive; never = auto-reject,
 #              NOT auto-allow — fail-closed)
 #
-# god-mode: sandbox is already at the top of the escalation ladder
-# (WIDER_MODES has no target above danger-full-access), so no tool call can
-# ever request escalation → the ask policy never surfaces a prompt and every
-# command executes directly.
+# god-mode (⚡) is the deployment default: sandbox is already at the top of
+# the escalation ladder (WIDER_MODES has no target above danger-full-access),
+# so no tool call can ever request escalation → the ask policy never surfaces
+# a prompt and every command executes directly. The preset name is the ⚡
+# glyph only — dsh's selector has no per-preset icon field, so the emoji
+# name is the visual marker.
 
 - id: permission
   config:
+    defaultPreset: god-mode
     presets:
       read-only:
         sandbox: read-only
@@ -38,5 +41,5 @@
       god-mode:
         sandbox: danger-full-access
         approval: ask
-        name: ⚡ god-mode
+        name: ⚡
         description: Full file access with no approval prompts — the sandbox is already at the top of the escalation ladder, so nothing can ask.

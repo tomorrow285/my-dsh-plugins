@@ -30,4 +30,4 @@ cp -r modes/tavern-mode "$DSH_HOME/.agent-presets/"
 dsh's mode selector renders a single generic icon for every preset (there is
 no per-preset icon field in the metadata schema — only `name`, `description`,
 `order`). Visual distinction is done via an emoji prefix in the preset
-`name`, e.g. the permission preset `⚡ god-mode`.
+`name`, e.g. the permission preset `⚡` (god-mode).
