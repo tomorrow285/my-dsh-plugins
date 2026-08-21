@@ -8,6 +8,8 @@ pnpm + TypeScript monorepo for [DeepSeek Harness](https://github.com/deepseek-ai
 .
 ├── pnpm-workspace.yaml     # packages/*
 ├── tsconfig.base.json      # shared strict TS config
+├── profiles/               # archived dsh profile config (permission presets, …)
+├── skills/                 # dsh development skills (create-independent-dsh-plugin, …)
 └── packages/
     └── dsh-ui-toc/         # conversation TOC web client plugin
 ```

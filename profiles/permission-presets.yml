@@ -1,0 +1,42 @@
+# Permission presets — archived from the live dsh deployment
+#
+# Source of truth: `/home/tomorrow285/.dsh/profiles/web/cordis.patch.yml`
+# (the web profile's user patch layer), captured 2026-08-21.
+#
+# This layer overrides the `permission` row (`@deepseek-ai/dsh-permission-presets`)
+# and restates every preset, because a loader patch REPLACES a row's entire
+# `config` value — it does not deep-merge keys.
+#
+# The two independent knobs per preset:
+#   sandbox  — read-only | workspace-write | danger-full-access
+#   approval — ask | never        (ask = interactive; never = auto-reject,
+#              NOT auto-allow — fail-closed)
+#
+# god-mode: sandbox is already at the top of the escalation ladder
+# (WIDER_MODES has no target above danger-full-access), so no tool call can
+# ever request escalation → the ask policy never surfaces a prompt and every
+# command executes directly.
+
+- id: permission
+  config:
+    presets:
+      read-only:
+        sandbox: read-only
+        approval: ask
+        name: read-only
+        description: Read-only filesystem access; write attempts require approval.
+      workspace-write:
+        sandbox: workspace-write
+        approval: ask
+        name: workspace-write
+        description: Write inside the workspace and permitted temporary directories; wider retries require approval.
+      danger-full-access:
+        sandbox: danger-full-access
+        approval: never
+        name: danger-full-access
+        description: Full file access without approval prompts (escalation requests auto-rejected).
+      god-mode:
+        sandbox: danger-full-access
+        approval: ask
+        name: god-mode
+        description: Full file access with no approval prompts — the sandbox is already at the top of the escalation ladder, so nothing can ask.
