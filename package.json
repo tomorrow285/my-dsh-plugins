@@ -13,5 +13,8 @@
     "typecheck": "pnpm -r typecheck",
     "watch": "pnpm -r watch",
     "verify": "pnpm -r verify"
+  },
+  "devDependencies": {
+    "unrun": "^0.3.1"
   }
 }
